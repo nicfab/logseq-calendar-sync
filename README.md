@@ -1,6 +1,6 @@
 # Logseq Calendar Sync
 
-Smart calendar and reminders synchronization script for Logseq journals using icalpal on macOS.
+Smart calendar and reminders synchronization script for Logseq journals using icalPal on macOS.
 
 ## Features
 
@@ -17,17 +17,17 @@ Smart calendar and reminders synchronization script for Logseq journals using ic
 ## Requirements
 
 - **macOS** (tested on macOS 13+)
-- **[icalpal](https://github.com/icalpal/icalpal)** Ruby gem
+- **[icalPal]([https://github.com/ajrosen/icalPal)** Ruby gem
 - **Logseq** with iCloud sync enabled
 - **Zsh shell** (default on modern macOS)
 - **Ruby** with gem support
 
 ## Installation
 
-### 1. Install icalpal
+### 1. Install icalPal
 
 ```bash
-gem install icalpal
+gem install icalPal
 ```
 
 ### 2. Download the script
@@ -43,16 +43,16 @@ chmod +x logseq-calendar-sync.sh
 mv logseq-calendar-sync.sh ~/Scripts/
 ```
 
-### 3. Configure icalpal
+### 3. Configure icalPal
 
-Set up icalpal for 24-hour time format:
+Set up icalPal for 24-hour time format:
 
 ```bash
-# Create icalpal config directory
-mkdir -p ~/.icalpal
+# Create icalPal config directory
+mkdir -p ~/.icalPal
 
 # Configure for 24-hour format
-echo "time_format: 24" > ~/.icalpal/config.yml
+echo "time_format: 24" > ~/.icalPal/config.yml
 ```
 
 ## Configuration
@@ -63,8 +63,8 @@ Edit the configuration variables at the top of the script:
 # Logseq vault path (default for iCloud sync)
 VAULT="$HOME/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/journals"
 
-# icalpal installation path (adjust based on your Ruby setup)
-ICALPAL="$HOME/.gem/ruby/3.4.0/bin/icalpal"
+# icalPal installation path (adjust based on your Ruby setup)
+icalPal="$HOME/.gem/ruby/3.4.0/bin/icalPal"
 
 # Calendars to include (case sensitive)
 ALLOWED_CALENDARS=("Calendar" "Personal" "Work" "Family")
@@ -76,12 +76,12 @@ DEBUG=false
 LOG_FILE="$HOME/Scripts/logseq_calendar.log"
 ```
 
-### Finding Your icalpal Path
+### Finding Your icalPal Path
 
-If you're unsure about the icalpal path:
+If you're unsure about the icalPal path:
 
 ```bash
-which icalpal
+which icalPal
 # or
 gem environment | grep "EXECUTABLE DIRECTORY"
 ```
@@ -91,7 +91,7 @@ gem environment | grep "EXECUTABLE DIRECTORY"
 To find your exact calendar names:
 
 ```bash
-icalpal calendars
+icalPal calendars
 ```
 
 Use the exact names (case sensitive) in the `ALLOWED_CALENDARS` array.
@@ -180,7 +180,7 @@ _Last sync: 14:32:15_
 
 ## How It Works
 
-1. **Data Retrieval**: Uses icalpal to fetch today's events and reminders
+1. **Data Retrieval**: Uses icalPal to fetch today's events and reminders
 2. **Intelligent Filtering**:
    - Excludes calendars not in the whitelist
    - Separates regular events from scheduled reminders
@@ -199,14 +199,14 @@ _Last sync: 14:32:15_
 
 ### Common Issues
 
-**icalpal not found**
+**icalPal not found**
 
 ```bash
-# Check if icalpal is installed
-gem list icalpal
+# Check if icalPal is installed
+gem list icalPal
 
 # Install if missing
-gem install icalpal
+gem install icalPal
 ```
 
 **Permission denied**
