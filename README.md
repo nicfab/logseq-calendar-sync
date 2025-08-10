@@ -34,13 +34,13 @@ gem install icalPal
 
 ```bash
 # Download directly
-curl -O https://raw.githubusercontent.com/nicfab/logseq-calendar-sync/main/logseq-calendar-sync.sh
+curl -O https://raw.githubusercontent.com/nicfab/Logseq-calendar-sync/main/Logseq-calendar-sync.sh
 
 # Make executable
-chmod +x logseq-calendar-sync.sh
+chmod +x Logseq-calendar-sync.sh
 
 # Move to a suitable location (optional)
-mv logseq-calendar-sync.sh ~/Scripts/
+mv Logseq-calendar-sync.sh ~/Scripts/
 ```
 
 ### 3. Configure icalPal
@@ -61,7 +61,7 @@ Edit the configuration variables at the top of the script:
 
 ```bash
 # Logseq vault path (default for iCloud sync)
-VAULT="$HOME/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/journals"
+VAULT="$HOME/Library/Mobile Documents/iCloud~com~Logseq~Logseq/Documents/journals"
 
 # icalPal installation path (adjust based on your Ruby setup)
 icalPal="$HOME/.gem/ruby/3.4.0/bin/icalPal"
@@ -73,7 +73,7 @@ ALLOWED_CALENDARS=("Calendar" "Personal" "Work" "Family")
 DEBUG=false
 
 # Log file location
-LOG_FILE="$HOME/Scripts/logseq_calendar.log"
+LOG_FILE="$HOME/Scripts/Logseq_calendar.log"
 ```
 
 ### Finding Your icalPal Path
@@ -101,13 +101,13 @@ Use the exact names (case sensitive) in the `ALLOWED_CALENDARS` array.
 ### Manual Execution
 
 ```bash
-./logseq-calendar-sync.sh
+./Logseq-calendar-sync.sh
 ```
 
 ### With Debug Mode
 
 ```bash
-DEBUG=true ./logseq-calendar-sync.sh
+DEBUG=true ./Logseq-calendar-sync.sh
 ```
 
 ### Automated Scheduling
@@ -119,10 +119,10 @@ Set up a cron job for automatic syncing:
 crontab -e
 
 # Add entry for sync every 30 minutes during work hours
-*/30 8-18 * * 1-5 /path/to/logseq-calendar-sync.sh
+*/30 8-18 * * 1-5 /path/to/Logseq-calendar-sync.sh
 
 # Or sync every hour
-0 * * * * /path/to/logseq-calendar-sync.sh
+0 * * * * /path/to/Logseq-calendar-sync.sh
 ```
 
 ### LaunchAgent (macOS Alternative)
@@ -131,16 +131,16 @@ Create a LaunchAgent for better macOS integration:
 
 ```bash
 # Create plist file
-cat > ~/Library/LaunchAgents/com.user.logseq-calendar-sync.plist << 'EOF'
+cat > ~/Library/LaunchAgents/com.user.Logseq-calendar-sync.plist << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.user.logseq-calendar-sync</string>
+    <string>com.user.Logseq-calendar-sync</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/path/to/logseq-calendar-sync.sh</string>
+        <string>/path/to/Logseq-calendar-sync.sh</string>
     </array>
     <key>StartInterval</key>
     <integer>1800</integer>
@@ -151,7 +151,7 @@ cat > ~/Library/LaunchAgents/com.user.logseq-calendar-sync.plist << 'EOF'
 EOF
 
 # Load the agent
-launchctl load ~/Library/LaunchAgents/com.user.logseq-calendar-sync.plist
+launchctl load ~/Library/LaunchAgents/com.user.Logseq-calendar-sync.plist
 ```
 
 ## Output Format
@@ -213,7 +213,7 @@ gem install icalPal
 
 ```bash
 # Make script executable
-chmod +x logseq-calendar-sync.sh
+chmod +x Logseq-calendar-sync.sh
 ```
 
 **No events/reminders showing**
@@ -232,13 +232,13 @@ chmod +x logseq-calendar-sync.sh
 Enable debug logging to troubleshoot issues:
 
 ```bash
-DEBUG=true ./logseq-calendar-sync.sh
+DEBUG=true ./Logseq-calendar-sync.sh
 ```
 
 Check the log file for detailed information:
 
 ```bash
-tail -f ~/Scripts/logseq_calendar.log
+tail -f ~/Scripts/Logseq_calendar.log
 ```
 
 ## Contributing
@@ -276,5 +276,5 @@ SOFTWARE.
 ## Acknowledgments
 
 - [icalPal](https://github.com/ajrosen/icalPal) - Ruby gem for macOS Calendar and Reminders access
-- [Logseq](https://github.com/logseq/logseq) - Privacy-first, open-source knowledge base
+- [Logseq](https://github.com/Logseq/Logseq) - Privacy-first, open-source knowledge base
 - The open-source community for inspiration and best practices
