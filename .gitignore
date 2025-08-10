@@ -1,0 +1,19 @@
+# Log files
+*.log
+
+# Backup files
+*.backup*
+*.bak
+
+# Cache directories
+.logseq_calendar_cache/
+
+# Personal configuration files
+config.personal.sh
+
+# macOS files
+.DS_Store
+
+# Temporary files
+/tmp/
+*.tmp
