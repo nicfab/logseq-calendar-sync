@@ -275,6 +275,6 @@ SOFTWARE.
 
 ## Acknowledgments
 
-- [icalpal](https://github.com/icalpal/icalpal) - Ruby gem for macOS Calendar and Reminders access
-- [Logseq](https://logseq.com/) - Privacy-first, open-source knowledge base
+- [icalPal](https://github.com/ajrosen/icalPal) - Ruby gem for macOS Calendar and Reminders access
+- [Logseq](https://github.com/logseq/logseq) - Privacy-first, open-source knowledge base
 - The open-source community for inspiration and best practices
