@@ -280,6 +280,8 @@ tail -f ~/Scripts/logseq_calendar.log
 - Smart filtering and parsing capabilities
 - Automatic backup system
 
+**Project developed with the support of Claude by [Anthropic](https://github.com/anthropics), under careful human oversight provided by me.**
+
 ## Contributing
 
 1. Fork the repository
