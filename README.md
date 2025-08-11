@@ -241,6 +241,8 @@ Check the log file for detailed information:
 tail -f ~/Scripts/Logseq_calendar.log
 ```
 
+**Project developed with the support of Claude by [Anthropic](https://github.com/anthropics), under careful human oversight provided by me.**
+
 ## Contributing
 
 1. Fork the repository
