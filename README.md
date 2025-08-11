@@ -279,4 +279,5 @@ SOFTWARE.
 
 - [icalPal](https://github.com/ajrosen/icalPal) - Ruby gem for macOS Calendar and Reminders access
 - [Logseq](https://github.com/Logseq/Logseq) - Privacy-first, open-source knowledge base
+- [Claude](https://github.com/anthropics/claude-code) by [Anthropic](https://github.com/anthropics) - One of the most powerful LLMs
 - The open-source community for inspiration and best practices
