@@ -76,13 +76,13 @@ fi
 
 log_message "DEBUG" "Using icalpal: $ICALPAL"
 
-log_message "INFO" "Retrieving events and reminders for today..."
+log_message "INFO" "Retrieving events and reminders for today (icalpal 3.9.1+ compatible)..."
 
 # Get events
 EVENTS=$($ICALPAL events --from today --to today 2>/dev/null)
 
-# Get today's reminders  
-REMINDERS=$($ICALPAL reminders --from today --to today 2>/dev/null)
+# Get today's reminders (icalpal 3.9.1+ compatibility)
+REMINDERS=$($ICALPAL tasksDueBefore --days 1 2>/dev/null)
 
 # Fallback for events if necessary
 if [[ -z "$EVENTS" ]]; then
@@ -178,8 +178,8 @@ parse_reminders() {
     local current_reminder=""
     local today_date=$(date '+%b %d, %Y')
     
-    # Get CSV to verify dates
-    local csv_reminders=$($ICALPAL reminders --from today --to today --output=csv 2>/dev/null)
+    # Get CSV to verify dates (icalpal 3.9.1+ compatibility)
+    local csv_reminders=$($ICALPAL tasksDueBefore --days 1 --output=csv 2>/dev/null)
     
     while IFS= read -r line; do
         [[ -z "$line" ]] && continue
@@ -258,8 +258,8 @@ extract_scheduled_reminders() {
     local current_event=""
     local current_calendar=""
     
-    # Get CSV reminders for cross-reference of lists
-    local csv_reminders=$($ICALPAL reminders --from today --to today --output=csv 2>/dev/null)
+    # Get CSV reminders for cross-reference of lists (icalpal 3.9.1+ compatibility)
+    local csv_reminders=$($ICALPAL tasksDueBefore --days 1 --output=csv 2>/dev/null)
     
     while IFS= read -r line; do
         [[ -z "$line" ]] && continue
@@ -367,9 +367,9 @@ get_reminder_list_from_csv() {
     echo "COMPLETED"
 }
 
-# Count upcoming reminders
+# Count upcoming reminders (icalpal 3.9.1+ compatibility)
 count_upcoming_reminders() {
-    local upcoming=$($ICALPAL reminders --from tomorrow --days 7 2>/dev/null)
+    local upcoming=$($ICALPAL tasksDueBefore --days 8 2>/dev/null)
     echo "$upcoming" | grep -c "^•" 2>/dev/null || echo "0"
 }
 

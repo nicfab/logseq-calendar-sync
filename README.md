@@ -17,7 +17,7 @@ Smart calendar and reminders synchronization script for Logseq journals using ic
 ## Requirements
 
 - **macOS** (tested on macOS 13+)
-- **[icalpal](https://github.com/icalpal/icalpal)** Ruby gem
+- **[icalpal](https://github.com/icalpal/icalpal)** Ruby gem (version 3.9.1+ required)
 - **Logseq** with iCloud sync enabled
 - **Zsh shell** (default on modern macOS)
 - **Ruby** with gem support
@@ -26,8 +26,17 @@ Smart calendar and reminders synchronization script for Logseq journals using ic
 
 ### 1. Install icalpal
 
+**⚠️ Important Update (August 11, 2025):** This script has been updated for icalpal 3.9.1 compatibility. The `reminders` command has been replaced with `tasksDueBefore`. Please ensure you have the latest version.
+
 ```bash
 gem install icalpal
+```
+
+Verify installation:
+
+```bash
+icalpal --version
+# Should show 3.9.1 or later
 ```
 
 ### 2. Download the script
@@ -92,6 +101,13 @@ To find your exact calendar names:
 
 ```bash
 icalpal calendars
+```
+
+To list reminders/tasks:
+
+```bash
+# New command in icalpal 3.9.1+
+icalpal tasksDueBefore --days 1
 ```
 
 Use the exact names (case sensitive) in the `ALLOWED_CALENDARS` array.
@@ -197,6 +213,13 @@ _Last sync: 14:32:15_
 
 ## Troubleshooting
 
+### Version Compatibility
+
+**icalpal 3.9.1+ required**
+
+- The script uses `tasksDueBefore` command introduced in icalpal 3.9.1
+- If using older versions, upgrade with: `gem update icalpal`
+
 ### Common Issues
 
 **icalpal not found**
@@ -240,6 +263,22 @@ Check the log file for detailed information:
 ```bash
 tail -f ~/Scripts/logseq_calendar.log
 ```
+
+## Changelog
+
+### v1.1 - August 11, 2025
+
+- **BREAKING**: Updated for icalpal 3.9.1 compatibility
+- Replaced `reminders` command with `tasksDueBefore` (icalpal 3.9.1+ requirement)
+- Updated all reminder-related functions to use new API
+- Added version compatibility checks in documentation
+
+### v1.0 - August 11, 2025
+
+- Initial release
+- Full calendar and reminders synchronization
+- Smart filtering and parsing capabilities
+- Automatic backup system
 
 ## Contributing
 
