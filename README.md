@@ -1,6 +1,6 @@
 # Logseq Calendar Sync
 
-Smart calendar and reminders synchronization script for Logseq journals using icalpal on macOS.
+Smart calendar and reminders synchronization script for Logseq journals using [icalPal](https://github.com/ajrosen/icalPal) on macOS.
 
 ## Features
 
@@ -13,30 +13,43 @@ Smart calendar and reminders synchronization script for Logseq journals using ic
 - 📊 **Comprehensive Logging**: Detailed logging with DEBUG mode support
 - 🔔 **Native Notifications**: macOS notifications on sync completion
 - ⚡ **Incremental Updates**: Updates existing agenda sections without losing other content
+- 🔍 **Auto-detect icalPal**: Works with Homebrew tap, gem user-install, or any custom path
 
 ## Requirements
 
 - **macOS** (tested on macOS 13+)
-- **[icalpal](https://github.com/icalpal/icalpal)** Ruby gem (version 3.9.1+ required)
+- **[icalPal](https://github.com/ajrosen/icalPal)** version **3.9.1+** (4.2.0 recommended via Homebrew tap)
 - **Logseq** with iCloud sync enabled
 - **Zsh shell** (default on modern macOS)
-- **Ruby** with gem support
+- **Ruby** with gem support (only if installing icalPal via `gem install`)
 
 ## Installation
 
-### 1. Install icalpal
+### 1. Install icalPal
 
-**⚠️ Important Update (August 11, 2025):** This script has been updated for icalpal 3.9.1 compatibility. The `reminders` command has been replaced with `tasksDueBefore`. Please ensure you have the latest version.
+**Recommended — Homebrew tap (most reliable, includes 4.2.0):**
 
 ```bash
-gem install icalpal
+brew install ajrosen/tap/icalPal
 ```
+
+This installs `icalPal` (and the lowercase alias `icalpal`) into `/opt/homebrew/bin/`, with all Ruby dependencies handled by Homebrew. No need to manage `GEM_HOME` or PATH.
+
+**Alternative — RubyGems (note the case):**
+
+```bash
+gem install icalPal
+```
+
+> ⚠️ **Note**: the gem name is `icalPal` (capital P). The lowercase form `icalpal` will fail with `ERROR: Could not find a valid gem 'icalpal'`.
+>
+> ⚠️ icalPal **4.2.0** has a known build issue when installed via plain `gem install` against a Homebrew-managed Ruby (read-only Cellar). If you hit `Gem::FilePermissionError` or `TypeError: no implicit conversion of Gem::FilePermissionError into String`, use the Homebrew tap above instead. See upstream [issue #54](https://github.com/ajrosen/icalPal/issues/54) for details. Versions 3.9.1 through 4.1.1 install cleanly via `gem install`.
 
 Verify installation:
 
 ```bash
-icalpal --version
-# Should show 3.9.1 or later
+icalPal --version
+# Should report 3.9.1 or later (4.2.0 recommended)
 ```
 
 ### 2. Download the script
@@ -48,32 +61,37 @@ curl -O https://raw.githubusercontent.com/nicfab/logseq-calendar-sync/main/logse
 # Make executable
 chmod +x logseq-calendar-sync.sh
 
-# Move to a suitable location (optional)
-mv logseq-calendar-sync.sh ~/Scripts/
+# Move to a location of your choice (optional)
+mv logseq-calendar-sync.sh ~/bin/
 ```
 
-### 3. Configure icalpal
+### 3. Configure icalPal (optional but recommended)
 
-Set up icalpal for 24-hour time format:
+icalPal reads default options from `~/.icalpal` — note: this is a **single file**, not a directory or a YAML config. Each line is a CLI flag. To enforce 24-hour times and a stable date format, create the file like this:
 
 ```bash
-# Create icalpal config directory
-mkdir -p ~/.icalpal
-
-# Configure for 24-hour format
-echo "time_format: 24" > ~/.icalpal/config.yml
+cat > ~/.icalpal <<'EOF'
+--tf %H:%M
+--df %Y-%m-%d
+--sort start_date
+EOF
 ```
+
+> See [`icalPal --help`](https://github.com/ajrosen/icalPal#config-files) for all available flags.
 
 ## Configuration
 
-Edit the configuration variables at the top of the script:
+The script auto-detects `icalPal` from your `PATH` and falls back to common gem user-install locations. In most cases you don't need to set anything. If you want to pin a specific binary, edit the script or export the variable before running:
+
+```bash
+export ICALPAL=/opt/homebrew/bin/icalPal
+```
+
+Other variables you may want to customize at the top of the script:
 
 ```bash
 # Logseq vault path (default for iCloud sync)
 VAULT="$HOME/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/journals"
-
-# icalpal installation path (adjust based on your Ruby setup)
-ICALPAL="$HOME/.gem/ruby/3.4.0/bin/icalpal"
 
 # Calendars to include (case sensitive)
 ALLOWED_CALENDARS=("Calendar" "Personal" "Work" "Family")
@@ -81,17 +99,17 @@ ALLOWED_CALENDARS=("Calendar" "Personal" "Work" "Family")
 # Enable debug logging
 DEBUG=false
 
-# Log file location
-LOG_FILE="$HOME/Scripts/logseq_calendar.log"
+# Log file (default: $HOME/.local/share/logseq-calendar-sync/sync.log)
+LOG_FILE="$HOME/.local/share/logseq-calendar-sync/sync.log"
 ```
 
-### Finding Your icalpal Path
+### Finding Your icalPal Path
 
-If you're unsure about the icalpal path:
+If the auto-detection picks the wrong binary, find available installations with:
 
 ```bash
+which icalPal
 which icalpal
-# or
 gem environment | grep "EXECUTABLE DIRECTORY"
 ```
 
@@ -100,14 +118,14 @@ gem environment | grep "EXECUTABLE DIRECTORY"
 To find your exact calendar names:
 
 ```bash
-icalpal calendars
+icalPal calendars
 ```
 
 To list reminders/tasks:
 
 ```bash
-# New command in icalpal 3.9.1+
-icalpal tasksDueBefore --days 1
+# tasksDueBefore is the icalPal 3.9.1+ command (replaces the older 'reminders')
+icalPal tasksDueBefore --days 1
 ```
 
 Use the exact names (case sensitive) in the `ALLOWED_CALENDARS` array.
@@ -196,7 +214,7 @@ _Last sync: 14:32:15_
 
 ## How It Works
 
-1. **Data Retrieval**: Uses icalpal to fetch today's events and reminders
+1. **Data Retrieval**: Uses icalPal to fetch today's events and reminders
 2. **Intelligent Filtering**:
    - Excludes calendars not in the whitelist
    - Separates regular events from scheduled reminders
@@ -215,33 +233,39 @@ _Last sync: 14:32:15_
 
 ### Version Compatibility
 
-**icalpal 3.9.1+ required**
+**icalPal 3.9.1+ required**
 
-- The script uses `tasksDueBefore` command introduced in icalpal 3.9.1
-- If using older versions, upgrade with: `gem update icalpal`
+- The script uses the `tasksDueBefore` command introduced in icalPal 3.9.1.
+- 4.2.0 is recommended via the Homebrew tap (`brew install ajrosen/tap/icalPal`).
 
 ### Common Issues
 
-**icalpal not found**
+**`gem install icalPal -v 4.2.0` fails with `Gem::FilePermissionError` or `TypeError`**
+
+This is an upstream bug specific to plain `gem install` against a Homebrew-managed Ruby — see [ajrosen/icalPal#54](https://github.com/ajrosen/icalPal/issues/54). Use the Homebrew tap instead:
 
 ```bash
-# Check if icalpal is installed
-gem list icalpal
+brew install ajrosen/tap/icalPal
+```
 
-# Install if missing
-gem install icalpal
+**icalPal not found**
+
+The script auto-detects `icalPal` and `icalpal` in `PATH` and falls back to common gem user-install locations. If it still fails, install via Homebrew or set the `ICALPAL` variable:
+
+```bash
+export ICALPAL=/path/to/icalPal
+./logseq-calendar-sync.sh
 ```
 
 **Permission denied**
 
 ```bash
-# Make script executable
 chmod +x logseq-calendar-sync.sh
 ```
 
 **No events/reminders showing**
 
-- Check calendar permissions in System Preferences → Security & Privacy → Privacy → Calendars
+- Check calendar permissions in System Settings → Privacy & Security → Calendars (and Reminders)
 - Verify calendar names in `ALLOWED_CALENDARS` match exactly (case sensitive)
 - Run with `DEBUG=true` to see detailed processing
 
@@ -261,15 +285,27 @@ DEBUG=true ./logseq-calendar-sync.sh
 Check the log file for detailed information:
 
 ```bash
-tail -f ~/Scripts/logseq_calendar.log
+tail -f ~/.local/share/logseq-calendar-sync/sync.log
 ```
 
 ## Changelog
 
+### v1.2 - April 28, 2026
+
+- **Added**: auto-detect of `icalPal`/`icalpal` binary via `command -v`, with fallback to common gem user-install locations. No more hardcoded paths required for typical Homebrew or gem installations.
+- **Added**: explicit Homebrew tap installation as the recommended path (`brew install ajrosen/tap/icalPal`), which avoids the upstream `gem install` build failure on Homebrew-managed Ruby.
+- **Added**: troubleshooting section with reference to upstream [issue #54](https://github.com/ajrosen/icalPal/issues/54) for users hitting the 4.2.0 install error.
+- **Added**: optional `ICALPAL` environment variable to override the detected binary.
+- **Changed**: default `LOG_FILE` location moved to `$HOME/.local/share/logseq-calendar-sync/sync.log` (XDG-style state directory) instead of the previous `$HOME/Scripts/`.
+- **Fixed**: documentation of the icalPal config — `~/.icalpal` is a single file with one CLI flag per line, not a directory containing a YAML file.
+- **Fixed**: corrected the `gem install` command to use the proper case (`icalPal`, not `icalpal`).
+- **Fixed**: corrected the upstream icalPal repository link (was pointing to a non-existent repo).
+- **Fixed**: minor whitespace and consistency cleanup.
+
 ### v1.1 - August 11, 2025
 
-- **BREAKING**: Updated for icalpal 3.9.1 compatibility
-- Replaced `reminders` command with `tasksDueBefore` (icalpal 3.9.1+ requirement)
+- **BREAKING**: Updated for icalPal 3.9.1 compatibility
+- Replaced `reminders` command with `tasksDueBefore` (icalPal 3.9.1+ requirement)
 - Updated all reminder-related functions to use new API
 - Added version compatibility checks in documentation
 
@@ -316,6 +352,6 @@ SOFTWARE.
 
 ## Acknowledgments
 
-- [icalpal](https://github.com/icalpal/icalpal) - Ruby gem for macOS Calendar and Reminders access
+- [icalPal](https://github.com/ajrosen/icalPal) - Ruby gem by Andy Rosen for macOS Calendar and Reminders access
 - [Logseq](https://logseq.com/) - Privacy-first, open-source knowledge base
 - The open-source community for inspiration and best practices
